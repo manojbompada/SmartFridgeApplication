@@ -90,7 +90,7 @@ public class SmartFridgeManagerImpl implements SmartFridgeManager {
 		/**
 		 * note: I'm assuming item type is not unique for an item i.e many items can have same item type
 		 */
-		double itemFillFactor = 0.0d;
+		double itemFillFactor = 0.0d, itemFillFactorAvg = 0.0d;
 		
 		// get all the items
 		Map<String,Item> fridgeItems = smartFridgeDaoImpl.getAllItems();
@@ -115,13 +115,20 @@ public class SmartFridgeManagerImpl implements SmartFridgeManager {
 				return itemFillFactor;
 			}
 			
+			int count = 0;
 			for (Item item: filterByItemsType) {
 				// add the fill factors of all the containers for a given item type
 				itemFillFactor += item.getFillFactor().doubleValue();
+				count += 1;
+			}
+			
+			if (count > 0) {
+				// calculate avg item fill factor by itemType
+				itemFillFactorAvg = itemFillFactor/count;
 			}
 		}
 		
-		return itemFillFactor;
+		return itemFillFactorAvg;
 	}
 
 	@Override
